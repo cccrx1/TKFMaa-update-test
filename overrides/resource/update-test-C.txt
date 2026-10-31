@@ -1,0 +1,3 @@
+Isolated resource update test C.
+Built by GitHub Actions from the pinned beta.2 test release.
+Game Pipeline and Agent behavior are unchanged.

@@ -1,0 +1,88 @@
+name: Build and publish test resources
+run-name: Test resources ${{ inputs.version }} (publish=${{ inputs.publish }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 测试资源版本，必须高于已发布版本
+        required: true
+        default: v1.0.7-beta.3
+        type: string
+      publish:
+        description: 校验通过后发布到本测试仓库；关闭时仅生成 Artifact
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resource-test-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'cccrx1/TKFMaa-update-test'
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install validation tools
+        run: |
+          python -m pip install -r tools/requirements.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Check package boundaries and reproducibility
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Check formatting
+        run: npx --no-install prettier --check .
+      - name: Build full test resource package
+        env:
+          RESOURCE_VERSION: ${{ inputs.version }}
+        run: python tools/build_resource.py --version "$env:RESOURCE_VERSION"
+      - name: Validate schemas, resource loading and Agent registrations
+        run: python tools/validate_resource.py
+      - name: Validate Maa resources and Interface references
+        run: node tools/check_maa.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resource-test-${{ inputs.version }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    if: inputs.publish && github.repository == 'cccrx1/TKFMaa-update-test'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: resource-test-${{ inputs.version }}
+          path: dist/
+      - name: Publish verified test release
+        env:
+          RESOURCE_VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/publish_resource.py --dist dist --version "$RESOURCE_VERSION"
