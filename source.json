@@ -6,5 +6,5 @@
     "sha256": "adae7dc368d190ecc1142a39358ab19765a6f199e3edcb5f2e497526ec79c703",
     "maafw_version": "5.14.3",
     "schema_commit": "8963191215ca49d6b037802acd07d20a4213160a",
-    "description": "TKFMaa 资源更新测试（活动列表变化后重选关卡）"
+    "description": "TKFMaa 资源更新测试（旧选择失效后默认首个关卡）"
 }

@@ -9,7 +9,6 @@ from pathlib import Path
 
 
 OPTION_NAME = "体力消耗关卡"
-SELECTION_REQUIRED = "请重新选择关卡"
 REGULAR_AUTO_CLEAR_MODE = "regular_auto_clear"
 REGULAR_AUTO_CLEAR_SENTINEL = "__REGULAR_ACTIVITY_CLEAR__"
 
@@ -455,21 +454,21 @@ def build_cases(config):
         }
         for activity in config["activities"]
     ]
-    for case in cases:
-        case["pipeline_override"]["DailyStaminaSelectionGate"] = {
-            "next": ["DailyStaminaConfiguredStart"]
-        }
     return cases
 
 
 def activity_option_key(cases):
     """Invalidate saved positional choices only when the ordered stage identities change."""
-    names = json.dumps([case["name"] for case in cases], ensure_ascii=False, separators=(",", ":"))
+    # The layout version invalidates indices saved by the earlier placeholder layout.
+    names = json.dumps({"layout": "direct-stage-v1", "names": [case["name"] for case in cases]},
+                       ensure_ascii=False, separators=(",", ":"))
     revision = hashlib.sha256(names.encode("utf-8")).hexdigest()[:12]
     return f"{OPTION_NAME}@{revision}"
 
 
 def update_interface(interface, cases):
+    if not cases:
+        raise ValueError("At least one real stamina stage is required")
     result = copy.deepcopy(interface)
     pattern = re.compile(rf"{re.escape(OPTION_NAME)}(?:@[0-9a-f]{{12}})?")
     keys = [key for key in result["option"] if pattern.fullmatch(key)]
@@ -480,15 +479,9 @@ def update_interface(interface, cases):
     option = copy.deepcopy(result["option"][old_key])
     option.update(
         label=OPTION_NAME,
-        description="活动关卡列表变化后会清除旧选择。请重新选择目标关卡；未选择时只提示并跳过体力任务。",
-        default_case=SELECTION_REQUIRED,
-        cases=[{
-            "name": SELECTION_REQUIRED,
-            "description": "活动列表已更新或尚未选择目标。重新选择关卡后才会进入游戏体力流程。",
-            "pipeline_override": {
-                "DailyStaminaSelectionGate": {"next": ["DailyStaminaSelectionRequired"]}
-            },
-        }] + cases,
+        description="活动关卡列表变化导致旧选择失效时，默认选择列表中的第一个关卡。",
+        default_case=cases[0]["name"],
+        cases=cases,
     )
     result["option"] = {
         (new_key if key == old_key else key): (option if key == old_key else value)

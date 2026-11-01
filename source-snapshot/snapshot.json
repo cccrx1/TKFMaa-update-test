@@ -5,7 +5,6 @@
   "worktree_changes": [
     "AGENTS.md",
     "assets/interface.json",
-    "assets/resource/pipeline/daily_stamina.json",
     "assets/resource/pipeline/daily_stamina_routes.json",
     "assets/stamina/active.yaml",
     "docs/zh_cn/tasks/daily_stamina.md",
@@ -23,7 +22,7 @@
     "agent/stamina.py": "97fa1fa33237383ff2858918196aff882cf9aeb9f48c460889c265ea35942062",
     "agent/task_rewards.py": "419eecaabf82030c1e2cdd5bd5b7b8fef7d63ecbcc32cf145a80fee0003c53ee",
     "agent/training.py": "86cd1989e20ed0278fa051660efe9e70566329a65982a6df255271e811001ddd",
-    "assets/interface.json": "506acc0dbc82741498b6abd78770e0a4eea7460d6ff1808f67396b7573e53f81",
+    "assets/interface.json": "655537774da66debe14930c4ceba176f20b63efb0a10f386f5a5b6d5f20787e3",
     "assets/resource/image/DailyRecruitment/SummonText.png": "b50c4ee571a7c66261bd7f7e12e8107dbaaded911fce2825a0310518b8326bc5",
     "assets/resource/image/DailyStamina/FrostEchoStageIcon.png": "c623d651a1cbbed1b48b414130773cbe3890d00b40c6c5b085ec8248ba94909a",
     "assets/resource/image/DailyStamina/SweepMaxButton.png": "c0cbd3cba0c9632b623492ea2fd5ed202d770b8358f7059d5197acd834c736b1",
@@ -37,7 +36,7 @@
     "assets/resource/pipeline/daily_friend_stamina.json": "4a2b949f2b2b66e18858556fff412b29590610bd5d6b582fe2180d89abe434c2",
     "assets/resource/pipeline/daily_recruitment.json": "01648b0510f76931743181ef28c800f1fde65810ca22bfb1fb9e3efee6555c0e",
     "assets/resource/pipeline/daily_shop.json": "436f02f95f64d39e59795a265ea4806ee3fc501b1715e72de670209876b396e8",
-    "assets/resource/pipeline/daily_stamina.json": "ded21ca28bc0685e063b5835dd8f2804c5ac7ad3e2209c22ebe6a371dd812612",
+    "assets/resource/pipeline/daily_stamina.json": "688d756f9d2fc82b7cc021136d97062bdb7195fc7d997629faf7583188c3c18b",
     "assets/resource/pipeline/daily_stamina_presets.json": "2f6a24ee39bf70917215075c7ff335107c70978b2dfbadf81f57199bc70ff482",
     "assets/resource/pipeline/daily_stamina_routes.json": "7d56d46e362531806f99191cabf1259d5cb518c0a47acc1c3775a0a8fd4ba68a",
     "assets/resource/pipeline/daily_task_rewards.json": "e42acd78de3586406f58c7caee1564a57d2b468223a1b765bd6ee1ba115aa516",
@@ -46,7 +45,7 @@
     "assets/resource/pipeline/regular_activity.json": "523c3e8c08bf8dace6fbfd91708eaf5822f8b60613e2f2b768c9d73532760f55",
     "assets/stamina/active.yaml": "dcc0da8675c1dc3ccdabf5bac2db0f1d00550bd574b7820022e9752f60ccd821",
     "tools/add_interaction_stability.py": "93145a422624aacc9eaf0ee2b8d71f0317f9ceff47646a47c81c08b5ec8f68d2",
-    "tools/build_stamina_activities.py": "9327ab89cf068f3f0023ae862da707ce237fe131a59450bec8c4192055cba85a",
+    "tools/build_stamina_activities.py": "eb8e41282fc1e1ccd5dbadcf7b18eaad83d57709194e9063ad9ddb697a374073",
     "tools/ocr_model.json": "5100e7d6f37e8e3186ebf04bc52e2c79a0dedef1b746f7ca5e705b312737dcff",
     "tools/requirements.txt": "30ae87dfeb927c8935168febfbf5dfa522a5b8e7e3005dc96137a0d8331f6d22"
   }

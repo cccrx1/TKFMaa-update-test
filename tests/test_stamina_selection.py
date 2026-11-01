@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -41,21 +42,27 @@ class StaminaSelectionTests(unittest.TestCase):
         generated = generator.update_interface(legacy, self.cases)
         self.assertNotIn(generator.OPTION_NAME, generated["option"])
         self.assertEqual(original_other, {k: v for k, v in generated["option"].items() if k != current})
-        self.assertEqual(generator.SELECTION_REQUIRED, generated["option"][current]["default_case"])
+        self.assertEqual(self.cases[0]["name"], generated["option"][current]["default_case"])
+        self.assertEqual(self.cases, generated["option"][current]["cases"])
         self.assertEqual(generator.OPTION_NAME, generated["option"][current]["label"])
         task_after = next(t for t in generated["task"] if t["entry"] == "DailyStaminaStart")
         self.assertEqual(task["option"][1:], task_after["option"][1:])
         self.assertEqual(current, task_after["option"][0])
         self.assertEqual(generated, generator.update_interface(generated, self.cases))
 
-    def test_unselected_stage_cannot_enter_game_flow(self):
+    def test_placeholder_and_selection_gate_are_removed(self):
         pipeline = json.loads((ROOT / "assets/resource/pipeline/daily_stamina.json").read_text(encoding="utf-8"))
-        self.assertEqual(["DailyStaminaSelectionGate"], pipeline["DailyStaminaStart"]["next"])
-        self.assertEqual(["DailyStaminaSelectionRequired"], pipeline["DailyStaminaSelectionGate"]["next"])
-        self.assertEqual("StopTask", pipeline["DailyStaminaSelectionRequired"]["action"]["type"])
-        self.assertNotIn("next", pipeline["DailyStaminaSelectionRequired"])
+        self.assertIn("DailyStaminaOpenExpeditionFromMain", pipeline["DailyStaminaStart"]["next"])
+        for name in ("DailyStaminaSelectionGate", "DailyStaminaSelectionRequired", "DailyStaminaConfiguredStart"):
+            self.assertNotIn(name, pipeline)
+        self.assertNotIn("请重新选择关卡", [case["name"] for case in self.cases])
         for case in self.cases:
-            self.assertEqual(["DailyStaminaConfiguredStart"], case["pipeline_override"]["DailyStaminaSelectionGate"]["next"])
+            self.assertNotIn("DailyStaminaSelectionGate", case["pipeline_override"])
+
+    def test_placeholder_layout_saved_index_is_invalidated(self):
+        names = json.dumps([c["name"] for c in self.cases], ensure_ascii=False, separators=(",", ":"))
+        previous_key = generator.OPTION_NAME + "@" + hashlib.sha256(names.encode("utf-8")).hexdigest()[:12]
+        self.assertNotEqual(previous_key, generator.activity_option_key(self.cases))
 
 
 if __name__ == "__main__":

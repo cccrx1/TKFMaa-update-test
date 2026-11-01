@@ -10,7 +10,7 @@
 
 在 Actions 中选择 **Build and publish test resources**，点击 **Run workflow**：
 
-- `version` 填递增的测试版本，例如 `v1.0.7-beta.6`。
+- `version` 填递增的测试版本，例如 `v1.0.7-beta.7`。
 - `publish` 默认关闭，只生成可下载的 Artifact。
 - 勾选 `publish` 后，全部校验通过才会在本仓库发布预发布版。
 
@@ -34,13 +34,15 @@ beta.5 加入定向重置：根据有序关卡名称生成内部选项标识，�
 
 beta.5 已验证重置与无游戏输入，提示未在界面显示；beta.6 将提示改为当前动作的 `Node.Action.Starting` 回调，继续验证可见提示与重选。
 
+beta.7 按维护者要求撤回上述重选占位方案：移除占位项、提示和入口拦截，旧选择失效后直接默认首个真实关卡，当前为“万圣鹿娘大横行！ - 关卡-1”。更换列表布局摘要，避免删除旧占位项再次导致序号错位。仅列表变更才重置，其他任务和恢复设置保留。
+
 ## 本地检查
 
 ```powershell
 python -m pip install -r tools/requirements.txt
 npm ci
 python -m unittest discover -s tests -p 'test_*.py' -v
-python tools/build_resource.py --version v1.0.7-beta.6
+python tools/build_resource.py --version v1.0.7-beta.7
 python tools/validate_resource.py
 node tools/check_maa.mjs
 ```

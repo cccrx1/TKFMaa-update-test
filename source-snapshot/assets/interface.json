@@ -70,7 +70,7 @@
             "name": "消耗体力",
             "entry": "DailyStaminaStart",
             "option": [
-                "体力消耗关卡@d5974df97559",
+                "体力消耗关卡@088344be5cfd",
                 "扫荡不足时手动补刷",
                 "体力不足时使用体力药",
                 "体力不足时购买体力"
@@ -163,21 +163,10 @@
                 }
             ]
         },
-        "体力消耗关卡@d5974df97559": {
+        "体力消耗关卡@088344be5cfd": {
             "type": "select",
-            "default_case": "请重新选择关卡",
+            "default_case": "万圣鹿娘大横行！ - 关卡-1",
             "cases": [
-                {
-                    "name": "请重新选择关卡",
-                    "description": "活动列表已更新或尚未选择目标。重新选择关卡后才会进入游戏体力流程。",
-                    "pipeline_override": {
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaSelectionRequired"
-                            ]
-                        }
-                    }
-                },
                 {
                     "name": "万圣鹿娘大横行！ - 关卡-1",
                     "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入关卡-1并扫荡。",
@@ -318,11 +307,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -466,11 +450,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -614,11 +593,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -762,11 +736,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -910,11 +879,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -1058,11 +1022,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -1206,11 +1165,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -1354,11 +1308,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -1502,11 +1451,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -1650,11 +1594,6 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 },
@@ -1815,17 +1754,12 @@
                                     ]
                                 }
                             }
-                        },
-                        "DailyStaminaSelectionGate": {
-                            "next": [
-                                "DailyStaminaConfiguredStart"
-                            ]
                         }
                     }
                 }
             ],
             "label": "体力消耗关卡",
-            "description": "活动关卡列表变化后会清除旧选择。请重新选择目标关卡；未选择时只提示并跳过体力任务。"
+            "description": "活动关卡列表变化导致旧选择失效时，默认选择列表中的第一个关卡。"
         },
         "扫荡不足时手动补刷": {
             "type": "switch",

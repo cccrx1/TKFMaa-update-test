@@ -7,7 +7,7 @@ on:
       version:
         description: 测试资源版本，必须高于已发布版本
         required: true
-        default: v1.0.7-beta.6
+        default: v1.0.7-beta.7
         type: string
       publish:
         description: 校验通过后发布到本测试仓库；关闭时仅生成 Artifact
