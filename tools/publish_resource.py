@@ -87,7 +87,8 @@ def main():
 来源提交：{commit}。
 
 已执行 Schema、maa-tools、资源加载、Agent 导入及 Custom 注册检查。
-本包仅改变测试版本、描述与标记文件，未修复现有体力关卡点击问题。
+本包使用已记录校验值的主项目工作区源码快照，包含体力地图点击修复与过期活动关卡清理。
+主项目来源：{manifest.get('source_snapshot', {}).get('base_commit', 'legacy baseline')}；快照可能包含未提交修改，以 Artifact 清单内逐文件校验值为准。
 本工作流未连接设备，游戏实测结果须另行记录。
 资源包仅用于现有 Windows x64 测试客户端，要求 MaaFramework {manifest['required_maafw']} 与既有 Python 环境。
 更新地址固定为本测试仓库，不用于正式客户端。

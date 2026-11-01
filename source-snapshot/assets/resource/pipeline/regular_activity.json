@@ -1,0 +1,1396 @@
+{
+    "RegularActivityStart": {
+        "next": [
+            "DailyStaminaStart"
+        ]
+    },
+    "AutoBattleStart": {
+        "next": [
+            "RegularActivityStageListDecision",
+            "CommonStopOnMainWithRetries"
+        ]
+    },
+    "RegularActivityStageListDecision": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "[JumpBack]CommonCloseReward",
+            "[JumpBack]RegularActivityConfirmSkipStory",
+            "[JumpBack]RegularActivitySkipStory",
+            "RegularActivityUsePotionPopup",
+            "RegularActivitySelectPotionTab",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivitySelectCurrencyTab",
+            "[JumpBack]RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityScanStageListDown1",
+            "RegularActivityDone"
+        ],
+        "timeout": 10000
+    },
+    "RegularActivityScanStageListDown1": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [
+                    360,
+                    760
+                ],
+                "end": [
+                    360,
+                    360
+                ],
+                "duration": 1500
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityScanStageListDown2"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityScanStageListDown2": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [
+                    360,
+                    760
+                ],
+                "end": [
+                    360,
+                    360
+                ],
+                "duration": 1500
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityScanStageListDown3"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityScanStageListDown3": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [
+                    360,
+                    760
+                ],
+                "end": [
+                    360,
+                    360
+                ],
+                "duration": 1500
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityScanStageListUp1"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityScanStageListUp1": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [
+                    360,
+                    360
+                ],
+                "end": [
+                    360,
+                    760
+                ],
+                "duration": 1500
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityScanStageListUp2"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityScanStageListUp2": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [
+                    360,
+                    360
+                ],
+                "end": [
+                    360,
+                    760
+                ],
+                "duration": 1500
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityScanStageListUp3"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityScanStageListUp3": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [
+                    360,
+                    360
+                ],
+                "end": [
+                    360,
+                    760
+                ],
+                "duration": 1500
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityOpenLatestStage",
+            "RegularActivityOpenNextPage",
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityOpenLatestStage": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityNewText"
+                ],
+                "box_index": 0
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true,
+                "target_offset": [
+                    160,
+                    75,
+                    0,
+                    0
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 800,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityStageDetailOrStory",
+            "RegularActivityStageListDecision"
+        ],
+        "max_hit": 20,
+        "pre_wait_freezes": 300
+    },
+    "__RegularActivityNewText": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "RegularActivity/NewStageMarker.png"
+                ],
+                "roi": [
+                    130,
+                    160,
+                    120,
+                    940
+                ],
+                "threshold": 0.75,
+                "order_by": "Vertical"
+            }
+        }
+    },
+    "RegularActivityOpenNextPage": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker",
+                    "__RegularActivityNextPageButton"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    680,
+                    610
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 800,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityStageListDecision"
+        ],
+        "max_hit": 8,
+        "pre_wait_freezes": 300
+    },
+    "__RegularActivityNextPageButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "NEXT"
+                ],
+                "roi": [
+                    610,
+                    480,
+                    110,
+                    220
+                ]
+            }
+        }
+    },
+    "RegularActivityStageDetailOrStory": {
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "[JumpBack]RegularActivityConfirmSkipStory",
+            "[JumpBack]RegularActivitySkipStory",
+            "RegularActivityUsePotionPopup",
+            "RegularActivitySelectPotionTab",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivitySelectCurrencyTab",
+            "[JumpBack]RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup",
+            "[Anchor]RegularActivityLowDecision",
+            "RegularActivityRefillWithPotionWhenLow",
+            "RegularActivityRefillWithCurrencyWhenLow",
+            "RegularActivityReturnWhenStaminaLow",
+            "RegularActivityStartManualBattle",
+            "RegularActivityStageListDecision"
+        ],
+        "timeout": 15000,
+        "on_error": [
+            "RegularActivityDone"
+        ]
+    },
+    "RegularActivityConsumedState": {
+        "anchor": "RegularActivityLowDecision",
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "[JumpBack]CommonCloseReward",
+            "[JumpBack]RegularActivityConfirmSkipStory",
+            "[JumpBack]RegularActivitySkipStory",
+            "RegularActivityReturnWhenStaminaLow",
+            "RegularActivityStartManualBattle",
+            "RegularActivityStageListDecision"
+        ],
+        "timeout": 15000,
+        "on_error": [
+            "RegularActivityDone"
+        ]
+    },
+    "RegularActivityRefillWithPotionWhenLow": {
+        "enabled": false,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DailyStaminaPresetStaminaLow",
+                    "__RegularActivityStartButton"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    360,
+                    1143
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 1200,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityUsePotionPopup",
+            "RegularActivitySelectPotionTab",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivitySelectCurrencyTab",
+            "RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityRefillWithCurrencyWhenLow": {
+        "enabled": false,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DailyStaminaPresetStaminaLow",
+                    "__RegularActivityStartButton"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    360,
+                    1143
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 1200,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivitySelectCurrencyTab",
+            "RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityReturnWhenStaminaLow": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DailyStaminaPresetStaminaLow",
+                    "__RegularActivityStartButton"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    162,
+                    74
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 1200,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityStartManualBattle": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DailyStaminaPresetStaminaEnough",
+                    "__RegularActivityStartButton"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    360,
+                    1143
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 1200,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityUsePotionPopup",
+            "RegularActivitySelectPotionTab",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivitySelectCurrencyTab",
+            "[JumpBack]RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup",
+            "RegularActivityWaitBattleResult"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "__RegularActivityStartButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "开始"
+                ],
+                "roi": [
+                    260,
+                    1040,
+                    210,
+                    170
+                ]
+            }
+        }
+    },
+    "RegularActivityWaitBattleResult": {
+        "next": [
+            "RegularActivityReturnMapFromBattleResult",
+            "[JumpBack]CommonWaitLoading",
+            "[JumpBack]RegularActivityEnableAutoBattle",
+            "[JumpBack]RegularActivityBattleInProgress",
+            "RegularActivityUsePotionPopup",
+            "RegularActivitySelectPotionTab",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivitySelectCurrencyTab",
+            "[JumpBack]RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup"
+        ],
+        "timeout": 300000,
+        "on_error": [
+            "RegularActivityDone"
+        ]
+    },
+    "RegularActivityEnableAutoBattle": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityBattleInProgress",
+                    "__RegularActivityAutoOffButton"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                500,
+                1140,
+                180,
+                110
+            ]
+        },
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityReturnMapFromBattleResult": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityReturnMapButton"
+                ],
+                "box_index": 0
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 1200,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityConsumedState"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "__RegularActivityReturnMapButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "返回地图",
+                    "返回"
+                ],
+                "roi": [
+                    300,
+                    1120,
+                    320,
+                    130
+                ]
+            }
+        }
+    },
+    "RegularActivityBattleInProgress": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "WAVE",
+                    "TURN"
+                ],
+                "roi": [
+                    0,
+                    40,
+                    180,
+                    120
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 3000,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    },
+    "__RegularActivityAutoOffButton": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "RegularActivity/AutoOffButton.png"
+                ],
+                "roi": [
+                    500,
+                    1140,
+                    180,
+                    110
+                ],
+                "threshold": 0.8
+            }
+        }
+    },
+    "RegularActivitySkipStory": {
+        "recognition": {
+            "type": "Or",
+            "param": {
+                "any_of": [
+                    "__RegularActivityStoryRecMarker",
+                    "__RegularActivityStorySkipButton"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    527,
+                    1041
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "RegularActivityConfirmSkipStory"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "__RegularActivityStoryRecMarker": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "REC"
+                ],
+                "roi": [
+                    500,
+                    40,
+                    120,
+                    110
+                ]
+            }
+        }
+    },
+    "__RegularActivityStorySkipButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "SKIP"
+                ],
+                "roi": [
+                    400,
+                    900,
+                    320,
+                    300
+                ]
+            }
+        }
+    },
+    "RegularActivityConfirmSkipStory": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "确定",
+                    "确认"
+                ],
+                "roi": [
+                    380,
+                    730,
+                    220,
+                    90
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 800,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityUsePotionPopup": {
+        "enabled": false,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityPurchasePopupMedicine",
+                    "StaminaPurchasePopupSingleMedicine",
+                    "StaminaPurchasePopupConfirm"
+                ],
+                "box_index": 2
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityConfirmPotionUse",
+            "RegularActivityCloseStaminaPurchasePopupAfterPurchase",
+            "RegularActivityStageDetailOrStory"
+        ],
+        "max_hit": 10,
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityBuyStaminaPopup": {
+        "enabled": false,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityPurchasePopupCurrency",
+                    "StaminaPurchasePopupConfirm"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityCancelMagicCrystalShortagePrompt",
+            "RegularActivityCurrencyPurchasedState"
+        ],
+        "max_hit": 1,
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityCancelMagicCrystalShortagePrompt": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "将以1魂晶购买200魔晶石。"
+                ],
+                "roi": [
+                    112,
+                    586,
+                    369,
+                    84
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    117,
+                    676,
+                    225,
+                    87
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityCurrencyPurchasedState": {
+        "anchor": "RegularActivityLowDecision",
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityCloseStaminaPurchasePopupAfterPurchase",
+            "RegularActivityReturnWhenStaminaLow",
+            "RegularActivityStartManualBattle",
+            "RegularActivityStageDetailOrStory"
+        ],
+        "timeout": 15000
+    },
+    "RegularActivityConfirmPotionUse": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "StaminaPurchasePopupCancel",
+                    "StaminaPurchasePopupConfirm"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityCloseStaminaPurchasePopupAfterPurchase",
+            "RegularActivityStageDetailOrStory"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivitySelectPotionTab": {
+        "enabled": false,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "StaminaPurchasePopupPotionTabLabel"
+                ],
+                "box_index": 0
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityUsePotionPopup",
+            "RegularActivitySelectCurrencyTab",
+            "RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivitySelectCurrencyTab": {
+        "enabled": false,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "StaminaPurchasePopupCurrencyTabLabel"
+                ],
+                "box_index": 0
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityBuyStaminaPopup",
+            "RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityCloseStaminaPurchasePopupAfterPurchase": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityPurchasePopupMarker",
+                    "StaminaPurchasePopupCancel"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityStageDetailOrStory"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityCloseStaminaPurchasePopup": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityPurchasePopupMarker",
+                    "StaminaPurchasePopupCancel"
+                ],
+                "box_index": 1
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityAbortUnknownRefillPopup": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "StaminaPurchasePopupCancel"
+                ],
+                "box_index": 0
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "post_wait_freezes": {
+            "time": 700,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "__RegularActivityPurchasePopupMarker": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "StaminaPurchasePopupPotionTabLabel",
+                    "StaminaPurchasePopupCurrencyTabLabel"
+                ]
+            }
+        }
+    },
+    "__RegularActivityPurchasePopupCurrency": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityPurchasePopupCurrencyAsk",
+                    "__RegularActivityPurchasePopupCurrencyExchange"
+                ]
+            }
+        }
+    },
+    "__RegularActivityPurchasePopupCurrencyAsk": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "是否消耗"
+                ],
+                "roi": [
+                    100,
+                    550,
+                    520,
+                    380
+                ]
+            }
+        }
+    },
+    "__RegularActivityPurchasePopupCurrencyExchange": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "兑换",
+                    "兌換"
+                ],
+                "roi": [
+                    100,
+                    550,
+                    520,
+                    380
+                ]
+            }
+        }
+    },
+    "__RegularActivityPurchasePopupMedicine": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__RegularActivityPurchasePopupMedicineItem",
+                    "__RegularActivityPurchasePopupMedicineAction"
+                ]
+            }
+        }
+    },
+    "__RegularActivityPurchasePopupMedicineItem": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "体力药"
+                ],
+                "roi": [
+                    100,
+                    350,
+                    520,
+                    580
+                ]
+            }
+        }
+    },
+    "__RegularActivityPurchasePopupMedicineAction": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "使用",
+                    "回复",
+                    "恢復",
+                    "补充"
+                ],
+                "roi": [
+                    100,
+                    350,
+                    520,
+                    580
+                ]
+            }
+        }
+    },
+    "RegularActivityDone": {
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "[JumpBack]CommonCloseReward",
+            "[JumpBack]RegularActivityConfirmSkipStory",
+            "[JumpBack]RegularActivitySkipStory",
+            "[JumpBack]RegularActivityCloseStaminaPurchasePopup",
+            "RegularActivityAbortUnknownRefillPopup",
+            "RegularActivityReturnMainFromStageDetail",
+            "RegularActivityReturnMainFromStageList",
+            "RegularActivityReturnMainFromSelection",
+            "CommonStopOnMainWithRetries"
+        ],
+        "timeout": 12000
+    },
+    "RegularActivityReturnMainFromStageDetail": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "stage",
+                    "出现敌人",
+                    "开始"
+                ],
+                "roi": [
+                    60,
+                    80,
+                    620,
+                    1140
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    162,
+                    74
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 900,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityReturnMainFromStageList": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "RegularActivityPresetStageListMarker"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    162,
+                    74
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 900,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityReturnMainFromSelection": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "世界征服",
+                    "目前活动",
+                    "限时活动",
+                    "进击"
+                ],
+                "roi": [
+                    0,
+                    90,
+                    720,
+                    1100
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    40,
+                    72
+                ]
+            }
+        },
+        "post_wait_freezes": {
+            "time": 900,
+            "target": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "next": [
+            "RegularActivityDone"
+        ],
+        "pre_wait_freezes": 300
+    },
+    "RegularActivityPresetStageListMarker": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "活动挑战还有",
+                    "斗内点数"
+                ],
+                "roi": [
+                    0,
+                    90,
+                    720,
+                    180
+                ]
+            }
+        }
+    }
+}

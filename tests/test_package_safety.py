@@ -1,4 +1,5 @@
 import hashlib
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -6,7 +7,7 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from build_resource import read_baseline, safe_name, version_key, write_archive
+from build_resource import read_baseline, read_snapshot, safe_name, version_key, write_archive
 
 
 class PackageSafetyTests(unittest.TestCase):
@@ -48,6 +49,25 @@ class PackageSafetyTests(unittest.TestCase):
         for version in ["latest", "v1.0.7", "v1.0.7-beta.3;exit", "../v1.0.7-beta.3"]:
             with self.subTest(version=version), self.assertRaises(ValueError):
                 version_key(version)
+
+    def test_snapshot_rejects_changed_or_unlisted_source(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "assets").mkdir()
+            source = root / "assets/interface.json"
+            source.write_bytes(b"{}")
+            metadata = {"repository": "cccrx1/TKFMaa", "base_commit": "a" * 40,
+                        "files": {"assets/interface.json": hashlib.sha256(b"{}").hexdigest()}}
+            (root / "snapshot.json").write_text(json.dumps(metadata), encoding="utf-8")
+            files, _ = read_snapshot(root)
+            self.assertEqual(files, {"interface.json": b"{}"})
+            source.write_bytes(b"changed")
+            with self.assertRaisesRegex(ValueError, "hash mismatch"):
+                read_snapshot(root)
+            source.write_bytes(b"{}")
+            (root / "config.json").write_bytes(b"private")
+            with self.assertRaisesRegex(ValueError, "inventory differs"):
+                read_snapshot(root)
 
 
 if __name__ == "__main__":

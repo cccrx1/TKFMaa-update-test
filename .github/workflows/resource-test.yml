@@ -7,7 +7,7 @@ on:
       version:
         description: 测试资源版本，必须高于已发布版本
         required: true
-        default: v1.0.7-beta.3
+        default: v1.0.7-beta.4
         type: string
       publish:
         description: 校验通过后发布到本测试仓库；关闭时仅生成 Artifact
@@ -48,6 +48,12 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Check formatting
         run: npx --no-install prettier --check .
+      - name: Check source activity generation and interaction stability
+        working-directory: source-snapshot
+        run: |
+          python tools/build_stamina_activities.py --check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/add_interaction_stability.py --check
       - name: Build full test resource package
         env:
           RESOURCE_VERSION: ${{ inputs.version }}

@@ -2,6 +2,7 @@
 .venv/
 build/
 dist/
+.history/
 node_modules/
 __pycache__/
 *.pyc

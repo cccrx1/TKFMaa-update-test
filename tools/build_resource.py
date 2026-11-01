@@ -71,6 +71,42 @@ def write_archive(path, files):
             archive.writestr(info, data, compresslevel=9)
 
 
+def read_snapshot(root):
+    metadata = json.loads((root / "snapshot.json").read_text(encoding="utf-8"))
+    if metadata["repository"] != "cccrx1/TKFMaa" or not re.fullmatch(r"[0-9a-f]{40}", metadata["base_commit"]):
+        raise ValueError("Unexpected source snapshot provenance.")
+    expected = metadata["files"]
+    actual = {p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file() and p.name != "snapshot.json"}
+    if actual != set(expected):
+        raise ValueError("Source snapshot inventory differs from its reviewed manifest.")
+    files = {}
+    extras = {"LICENSE", "assets/stamina/active.yaml", "tools/build_stamina_activities.py",
+              "tools/add_interaction_stability.py", "tools/requirements.txt", "tools/ocr_model.json"}
+    for name, digest in expected.items():
+        if name == "assets/interface.json":
+            target = "interface.json"
+        elif name.startswith("assets/resource/"):
+            target = name.removeprefix("assets/")
+        elif name.startswith("agent/"):
+            target = name
+        elif name in extras:
+            target = None
+        else:
+            raise ValueError(f"Unexpected source input: {name}")
+        if ".." in PurePosixPath(name).parts or "\\" in name or ":" in name or PurePosixPath(name).is_absolute():
+            raise ValueError("Unsafe source input path.")
+        path = root / name
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents if parent != root.parent):
+            raise ValueError("Source symlinks are not accepted.")
+        data = path.read_bytes()
+        if sha256(data) != digest:
+            raise ValueError(f"Source input hash mismatch: {name}")
+        if target is not None:
+            safe_name(target)
+            files[target] = data
+    return files, metadata
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--version", required=True)
@@ -92,22 +128,39 @@ def main():
     if not baseline.exists():
         baseline.parent.mkdir(parents=True, exist_ok=True)
         urllib.request.urlretrieve(config["download_url"], baseline)
-    files = read_baseline(baseline, config["sha256"])
-    for name in config.get("remove", []):
-        safe_name(name)
-        if name not in files:
-            raise ValueError(f"Expected removed file was absent: {name}")
-        del files[name]
-    for path in (ROOT / "overrides").rglob("*"):
-        if path.is_symlink():
-            raise ValueError("Overlay symlinks are not accepted.")
-        if path.is_file():
-            name = path.relative_to(ROOT / "overrides").as_posix()
+    baseline_files = read_baseline(baseline, config["sha256"])
+    provenance = None
+    if config.get("mode") == "source_snapshot":
+        files, provenance = read_snapshot(ROOT / "source-snapshot")
+        model = json.loads((ROOT / "source-snapshot/tools/ocr_model.json").read_text(encoding="utf-8"))
+        for item in model["files"]:
+            name = "resource/model/ocr/" + item["name"]
             safe_name(name)
-            files[name] = path.read_bytes()
+            data = baseline_files[name]
+            if len(data) != item["bytes"] or sha256(data) != item["sha256"]:
+                raise ValueError("Baseline OCR model differs from the source model lock.")
+            files[name] = data
+    else:
+        files = baseline_files
+        for name in config.get("remove", []):
+            safe_name(name)
+            if name not in files:
+                raise ValueError(f"Expected removed file was absent: {name}")
+            del files[name]
+        for path in (ROOT / "overrides").rglob("*"):
+            if path.is_symlink():
+                raise ValueError("Overlay symlinks are not accepted.")
+            if path.is_file():
+                name = path.relative_to(ROOT / "overrides").as_posix()
+                safe_name(name)
+                files[name] = path.read_bytes()
     interface = json.loads(files["interface.json"].decode("utf-8-sig"))
-    if interface["name"] != "TKFMaa" or interface["version"] != config["baseline_version"]:
+    if interface["name"] != "TKFMaa" or (not provenance and interface["version"] != config["baseline_version"]):
         raise ValueError("Unexpected baseline project or version.")
+    if provenance:
+        if interface["agent"] != {"child_exec": "python", "child_args": ["../agent/main.py"]}:
+            raise ValueError("Unexpected source Agent command.")
+        interface["agent"] = {"child_exec": "./python/python.exe", "child_args": ["./agent/main.py"]}
     if interface["agent"] != {"child_exec": "./python/python.exe", "child_args": ["./agent/main.py"]}:
         raise ValueError("Unexpected Windows packaged Agent command.")
     interface.update(version=args.version, github=f"https://github.com/{TEST_REPO}", description=config["description"])
@@ -125,6 +178,8 @@ def main():
                 "baseline_sha256": config["sha256"], "source_commit": os.getenv("GITHUB_SHA", "local"),
                 "required_maafw": config["maafw_version"], "platform": "win-x64", "archive": archive.name,
                 "sha256": archive_hash, "files": {name: sha256(data) for name, data in sorted(files.items())}}
+    if provenance:
+        manifest["source_snapshot"] = provenance
     (dist / "package-manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"version": args.version, "files": len(files), "bytes": archive.stat().st_size, "sha256": archive_hash}))
 

@@ -1,10 +1,10 @@
 {
     "repository": "cccrx1/TKFMaa-update-test",
+    "mode": "source_snapshot",
     "baseline_version": "v1.0.7-beta.2",
     "download_url": "https://github.com/cccrx1/TKFMaa-update-test/releases/download/v1.0.7-beta.2/TKFMaa-resource-win-x64-v1.0.7-beta.2.zip",
     "sha256": "adae7dc368d190ecc1142a39358ab19765a6f199e3edcb5f2e497526ec79c703",
     "maafw_version": "5.14.3",
     "schema_commit": "8963191215ca49d6b037802acd07d20a4213160a",
-    "description": "TKFMaa 资源更新隔离测试 C（Actions 自动打包）",
-    "remove": ["resource/update-test-B.txt"]
+    "description": "TKFMaa 最新源码资源更新测试（体力修复与过期活动清理）"
 }

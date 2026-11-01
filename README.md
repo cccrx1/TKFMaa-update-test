@@ -10,7 +10,7 @@
 
 在 Actions 中选择 **Build and publish test resources**，点击 **Run workflow**：
 
-- `version` 填递增的测试版本，例如 `v1.0.7-beta.3`。
+- `version` 填递增的测试版本，例如 `v1.0.7-beta.4`。
 - `publish` 默认关闭，只生成可下载的 Artifact。
 - 勾选 `publish` 后，全部校验通过才会在本仓库发布预发布版。
 
@@ -18,13 +18,15 @@
 
 ## 资源来源和检查
 
-`source.json` 固定本测试仓库已有的 beta.2 资源包及 SHA256。`overrides/` 保存此次资源覆盖文件，`remove` 声明要从新包中移除的旧文件。构建得到包含 Interface、资源与 Agent 的完整 Windows x64 资源包。
+`source-snapshot/` 保存从主项目工作区导出的运行源码、活动 YAML 与必要的校验工具。`snapshot.json` 记录主项目基准提交、未提交修改路径和逐文件 SHA256；快照包含尚未提交的体力修复和过期活动清理，不能只用基准提交表示全部内容。
+
+`source.json` 的 `source_snapshot` 模式从快照重新构建 Interface、Pipeline、图片与 Agent，不沿用旧包的游戏逻辑。beta.2 资源包仅提供 OCR 模型，模型逐文件大小与 SHA256 必须与主项目 `tools/ocr_model.json` 一致。包内更新源与 Windows Agent 路径在打包时改为测试客户端布局。原 `overrides/` 仅供历史模式使用，本模式不加载旧标记覆盖文件。
 
 构建环境固定 Python 3.12、MaaFramework 5.14.3 和 maa-tools 1.0.23。Schema 从 MaaFramework 固定提交取得。发布前执行路径与校验和检查、打包重现性测试、JSON Schema、maa-tools、资源加载、Agent 导入和 Custom 注册检查。
 
 运行环境、用户配置、日志和缓存不进入资源包。测试包始终指向本仓库。现有版本不覆盖，已发表测试版本不能被较低版本替代；未完成的草稿只能用一致的文件继续上传。
 
-首次测试仅替换 beta.2 的标记 B 为标记 C，以及版本和说明。原有体力关卡点击问题未修复，不应将构建成功解释为全部游戏任务已通过。
+beta.3 验证标记 B → C 的纯打包机制；beta.4 使用真实源码快照，包含体力地图稳定等待与详情确认修复，移除已过期的 Trick or Sweet 六个关卡。构建成功不等于设备验收通过，客户端升级与体力任务结果另行记录。
 
 ## 本地检查
 
@@ -32,7 +34,7 @@
 python -m pip install -r tools/requirements.txt
 npm ci
 python -m unittest discover -s tests -p 'test_*.py' -v
-python tools/build_resource.py --version v1.0.7-beta.3
+python tools/build_resource.py --version v1.0.7-beta.4
 python tools/validate_resource.py
 node tools/check_maa.mjs
 ```

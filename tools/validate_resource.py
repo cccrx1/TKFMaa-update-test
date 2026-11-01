@@ -67,7 +67,7 @@ def main():
     subprocess.run([sys.executable, "-B", "-c", "import sys; sys.path.insert(0,sys.argv[1]); import main; print('Agent imports OK')", str(stage / "agent")], check=True, cwd=ROOT)
     report = {"passed": True, "pipeline_files": len(pipelines), "schema_revision": config["schema_commit"],
               "resource_load": "passed", "agent_imports": "passed", "custom_references": {key: len(value) for key, value in referenced.items()},
-              "device_tests": "not_run", "known_limitations": ["Existing stamina stage-click defect is not fixed by this packaging test."]}
+              "device_tests": "not_run", "known_limitations": ["Cloud validation does not prove game task behavior."]}
     (ROOT / "dist/validation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report))
 
