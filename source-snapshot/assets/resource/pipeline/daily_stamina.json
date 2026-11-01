@@ -17,7 +17,7 @@
             "type": "StopTask"
         },
         "focus": {
-            "Node.PipelineNode.Starting": {
+            "Node.Action.Starting": {
                 "content": "请在“消耗体力”的任务设置中重新选择关卡，本次已跳过体力任务。",
                 "display": [
                     "log",

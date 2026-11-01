@@ -10,7 +10,7 @@
 
 在 Actions 中选择 **Build and publish test resources**，点击 **Run workflow**：
 
-- `version` 填递增的测试版本，例如 `v1.0.7-beta.5`。
+- `version` 填递增的测试版本，例如 `v1.0.7-beta.6`。
 - `publish` 默认关闭，只生成可下载的 Artifact。
 - 勾选 `publish` 后，全部校验通过才会在本仓库发布预发布版。
 
@@ -32,13 +32,15 @@ beta.4 已暴露旧配置的关卡序号迁移问题：MFAAvalonia 2.16.2 保留
 
 beta.5 加入定向重置：根据有序关卡名称生成内部选项标识，列表变化时旧选择失效，显示名称保持“体力消耗关卡”。默认“请重新选择关卡”，未选择时只提示并跳过，不进入游戏导航。实际关卡 Case 才放行原流程；其他设置保留。列表不变的识别参数修复不改变选项标识。升级、提示和重选后运行须通过客户端单独验收。
 
+beta.5 已验证重置与无游戏输入，提示未在界面显示；beta.6 将提示改为当前动作的 `Node.Action.Starting` 回调，继续验证可见提示与重选。
+
 ## 本地检查
 
 ```powershell
 python -m pip install -r tools/requirements.txt
 npm ci
 python -m unittest discover -s tests -p 'test_*.py' -v
-python tools/build_resource.py --version v1.0.7-beta.5
+python tools/build_resource.py --version v1.0.7-beta.6
 python tools/validate_resource.py
 node tools/check_maa.mjs
 ```
