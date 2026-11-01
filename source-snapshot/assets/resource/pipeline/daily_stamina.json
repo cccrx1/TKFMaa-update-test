@@ -1,6 +1,33 @@
 {
     "DailyStaminaStart": {
         "next": [
+            "DailyStaminaSelectionGate"
+        ]
+    },
+    "DailyStaminaSelectionGate": {
+        "next": [
+            "DailyStaminaSelectionRequired"
+        ]
+    },
+    "DailyStaminaSelectionRequired": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "StopTask"
+        },
+        "focus": {
+            "Node.PipelineNode.Starting": {
+                "content": "请在“消耗体力”的任务设置中重新选择关卡，本次已跳过体力任务。",
+                "display": [
+                    "log",
+                    "toast"
+                ]
+            }
+        }
+    },
+    "DailyStaminaConfiguredStart": {
+        "next": [
             "[JumpBack]CommonWaitLoading",
             "[JumpBack]CommonCloseMainGift",
             "DailyStaminaOpenExpeditionFromMain",

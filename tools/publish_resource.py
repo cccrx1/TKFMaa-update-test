@@ -88,6 +88,7 @@ def main():
 
 已执行 Schema、maa-tools、资源加载、Agent 导入及 Custom 注册检查。
 本包使用已记录校验值的主项目工作区源码快照，包含体力地图点击修复与过期活动关卡清理。
+活动关卡列表变化后旧选择失效，默认“请重新选择关卡”；未选择时提示并跳过体力任务，其他设置保留。仅识别参数更新而列表不变时不重置。
 主项目来源：{manifest.get('source_snapshot', {}).get('base_commit', 'legacy baseline')}；快照可能包含未提交修改，以 Artifact 清单内逐文件校验值为准。
 本工作流未连接设备，游戏实测结果须另行记录。
 资源包仅用于现有 Windows x64 测试客户端，要求 MaaFramework {manifest['required_maafw']} 与既有 Python 环境。
