@@ -8,13 +8,17 @@
 
 ## 手动运行自动打包
 
-在 Actions 中选择 **Build and publish test resources**，点击 **Run workflow**：
+在 Actions 中选择 **Prepare or publish TKFMaa update**，点击 **Run workflow**：
 
-- `version` 填递增的测试版本，例如 `v1.0.7-beta.7`。
+- `source_sha` 填已审核的主仓库完整 40 位提交，不从浮动 main 或历史快照构建。
+- `version` 填候选版本；只有批准在线发布时才选择递增的发布版本。
+- `kind` 为 `resource` 或 `full-mirror`；后者只镜像主仓库已公开且带来源记录的同版本完整包。
 - `publish` 默认关闭，只生成可下载的 Artifact。
-- 勾选 `publish` 后，全部校验通过才会在本仓库发布预发布版。
+- 开启发布前必须完成客户端验收，提供绑定版本、源码和候选清单 SHA256 的 `acceptance_json` 与 `release_notes`。发布工具核验草稿附件后才公开，不覆盖已有公开版本。
 
-该流程不在 push、PR 或打标签时自动发布。它不访问正式项目仓库，也不发布正式安装包。
+该流程只读主仓库源码与完整包，写权限仅用于本测试仓库。资源发布还要求固定仓库变量 `TKFM_CHANNEL_BASELINE_SHA256`，部署模板本身不会配置变量或发布版本。首次部署先执行 `publish: false` 验证。
+
+`resource-test.yml` 已停用发布 job，保留只读历史构建；`resources-candidate.yml` 仍只生成 Artifact。下面的快照与 beta 版本说明用于追溯旧实验，不是新流程的源码入口。
 
 ## 资源来源和检查
 

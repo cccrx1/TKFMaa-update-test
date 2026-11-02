@@ -1,5 +1,5 @@
-name: Build and publish test resources
-run-name: Test resources ${{ inputs.version }} (publish=${{ inputs.publish }})
+name: Legacy resource build (read-only)
+run-name: Legacy test resources ${{ inputs.version }} (no release)
 
 on:
   workflow_dispatch:
@@ -9,11 +9,6 @@ on:
         required: true
         default: v1.0.7-beta.7
         type: string
-      publish:
-        description: 校验通过后发布到本测试仓库；关闭时仅生成 Artifact
-        required: true
-        default: false
-        type: boolean
 
 permissions:
   contents: read
@@ -73,7 +68,8 @@ jobs:
           retention-days: 7
 
   publish:
-    if: inputs.publish && github.repository == 'cccrx1/TKFMaa-update-test'
+    # Superseded by publish.yml; preserve the historical implementation for review.
+    if: ${{ false }}
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
