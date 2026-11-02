@@ -49,3 +49,11 @@ node tools/check_maa.mjs
 
 每次构建使用干净的工作目录。`build/`、`dist/`、`.cache/` 和虚拟环境都不提交。
 Artifact 中的 `package-manifest.json` 与 `validation.json` 供检查，Release 仅上传 ZIP 和 SHA256 文件。
+
+## 从当前源码直接构建的候选流程
+
+`resources-candidate.yml` 验证主项目新资源构建流程，输入为 `candidate/` 中已在本机审核和验收的公开源码，来源及文件哈希见 `candidate-source.json`。构建与校验步骤和主项目 `.github/workflows/resources.yml` 相同，仅调整测试仓库路径和更新源。
+
+该流程直接按模型锁恢复 OCR，不读取旧 beta 发布包；构建六种桌面目标的资源 ZIP、SHA256 和清单。所有测试产物的更新地址固定指向本测试仓库，权限只有 `contents: read`，只上传 Artifact，不创建标签或 Release。
+
+历史 `resource-test.yml` 与 `source-snapshot/` 保留供既有测试追溯，不由候选流程调用。候选构建通过仍需分别确认正式仓库的提交推送，以及正式资源发布源和版本；本流程不会自动切换正式客户端。

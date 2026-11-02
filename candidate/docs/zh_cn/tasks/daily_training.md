@@ -1,0 +1,141 @@
+# 调教（DailyTraining）
+
+入口节点：`DailyTrainingStart`；实现文件：`assets/resource/pipeline/daily_training.json`、`agent/training.py`。
+
+## 前置状态
+
+- 游戏位于主界面，调教功能已解锁。
+- 确认调教目标、道具范围和珍贵道具开关；“指定次数”模式填写 1–100 次，界面默认 5 次。
+- 默认优先通用道具，珍贵道具开关关闭。调教会消耗点数与选定道具，不自动购买或补充资源。
+
+## 主流程
+
+1. 识别完整的主界面调教点数，正数时进入，零点数时结束；读不清不能按有点数处理。
+2. 打开排序筛选面板，滑动查找“调教进度”，将该行切换为“可调教”，再确认。
+3. 进入当前角色的 `NEXT` 房间；没有命中 `NEXT` 且列表仍可识别时返回主界面。
+4. 按选项依次扫描通用或活动栏，只选择库存明确大于零且允许使用的槽位。
+5. 指定次数模式每次点击后重新识别页面，再决定继续或返回；全部点数模式按原有有限长按流程执行。
+6. 正常完成、道具不可用、出现剧情邀请或资源不足提示时，按已知页面返回并确认主界面。
+
+```mermaid
+flowchart TD
+    Start[开始任务，处理加载与可恢复页面] --> Points{主界面点数识别}
+    Points -->|正整数计数| Open[进入调教，识别排序按钮并打开筛选]
+    Points -->|零点数| Confirm[公共主界面结束确认]
+    Points -->|候选持续无法识别| Fail[任务失败，不认定已完成]
+    Open --> Scroll[滑动筛选面板，查找调教进度行]
+    Scroll --> Filter{调教进度为可调教?}
+    Filter -->|是| Apply[确认筛选]
+    Filter -->|否，进度行可识别| Cycle[按识别行点击窄箭头区域，最多 4 次]
+    Cycle --> Filter
+    Filter -->|未找到进度行| More[追加滑动，最多 2 次]
+    More --> Filter
+    Filter -->|候选超时| CloseFilter[识别筛选面板并关闭，最多 1 次]
+    CloseFilter --> Back[识别房间列表并返回]
+    Apply --> Room{NEXT 房间可识别?}
+    Room -->|是| Detail[打开房间并识别调教道具标题]
+    Room -->|未命中且列表可识别| Back
+    Detail --> Items[选择允许道具并执行，见下图]
+    Items --> Return[识别详情页后返回列表]
+    Return -->|识别到列表| Back
+    Return -->|等待目标页超时且仍是详情，未达上限| Return
+    Back --> Confirm
+    Confirm -->|主界面命中| Done[停止任务]
+    Confirm -->|等待主界面超时且仍是列表，未达上限| Back
+    Confirm -->|未知页面或重试用尽| Fail
+```
+
+滑动与循环次数都是单次任务内的节点上限。当前流程处理选中的一个 `NEXT` 房间后返回，
+没有自动切换到下一个角色或再次筛选房间的循环。公共结束确认见 [公共主界面恢复](common_navigation.md)。
+
+```mermaid
+flowchart TD
+    Start[识别详情页，切换首选道具栏] --> Scan{Agent 顺序扫描槽位}
+    Scan -->|珍贵道具未获允许| Skip[跳过该槽位]
+    Scan -->|库存为零或无法明确识别| Skip
+    Skip --> Scan
+    Scan -->|库存大于零且允许使用| Select[点击道具槽位]
+    Scan -->|本栏没有可用道具| Fallback{选项是否配置了备用栏?}
+    Fallback -->|是，尚未尝试| Other[切换备用栏]
+    Other --> Scan
+    Fallback -->|否| Return[识别详情并返回列表、主界面]
+    Select --> Mode{调教目标}
+    Mode -->|指定次数| Click[点击一次，等待 2 秒]
+    Click --> State{优先识别加载、剧情与不足提示}
+    State -->|加载| Wait[等待后复查]
+    Wait --> State
+    State -->|剧情邀请| Story[识别正文与取消，取消后结束本次调教]
+    Story --> Limit{是否出现上限提示?}
+    Limit -->|是| ConfirmLimit[识别正文与确定，关闭后返回]
+    ConfirmLimit --> Return
+    Limit -->|否，目标页可识别| Return
+    State -->|点数或道具不足| Cancel[关闭或取消提示]
+    Cancel --> Return
+    State -->|详情页且未达指定次数| Click
+    State -->|已达指定次数且仍在详情页| Return
+    State -->|主界面| Done[停止任务]
+    Mode -->|全部点数| Hold[每次长按 3 秒，最多 12 轮]
+    Hold --> HoldState{识别长按后的页面}
+    HoldState -->|剧情邀请| Story
+    HoldState -->|不足提示| Cancel
+    HoldState -->|详情页且未达轮次上限| Hold
+    HoldState -->|轮次用尽且详情页可识别| Return
+    HoldState -->|主界面| Done
+```
+
+图中槽位扫描由 Agent 完成，跨页面跳转与点击次数由 Pipeline 控制。未识别到已知后继时可能失败，
+不能把图中的正常返回当作对任意未知页面的保证。
+
+## 页面识别与实现映射
+
+| 页面或决策 | 识别依据                                             | 对应节点或实现                                                       |
+| ---------- | ---------------------------------------------------- | -------------------------------------------------------------------- |
+| 主界面点数 | 完整正整数或全零计数，兼容斜杠两侧空格               | `__DailyTrainingMainHasCount` / `__DailyTrainingMainZeroCount`       |
+| 排序入口   | 入手顺序、图鉴顺序及原有排序文字                     | `DailyTrainingOpenFilter`                                            |
+| 筛选面板   | 筛选排序                                             | `DailyTrainingFilterPanelTop`                                        |
+| 筛选进度行 | 调教进度、可调教；适应滑动后的纵向位置               | `DailyTrainingSetProgressFilter`                                     |
+| 房间列表   | NEXT、CLEAR 或排序文字                               | `DailyTrainingEnterNextRoom` / `DailyTrainingReturnMainFromRoomList` |
+| 房间详情   | 下方完整“调教道具”标题                               | `DailyTrainingSelectConfiguredItem`                                  |
+| 库存       | 固定槽位下方整数库存，可带千位分隔符或数量前缀       | `DailyTrainingChooseItem`，位于 `agent/training.py`                  |
+| 选物分发   | 有库存识别成功才点击；识别失败触发选项配置的备用路线 | `DailyTrainingChooseCommonItem` / `DailyTrainingChooseEventItem`     |
+| 道具点击   | 自定义识别返回的允许槽位框                           | `DailyTrainingClickCommonItem` / `DailyTrainingClickEventItem`       |
+| 指定次数   | 每次执行后重查，次数输入覆盖命中上限                 | `DailyTrainingClickCenterSlow.max_hit`                               |
+| 剧情与上限 | “随时观看剧情”与取消、“已达到调教上限”与确定联合识别 | `DailyTrainingCloseStoryPrompt` / `DailyTrainingCloseLimitPrompt`    |
+| 不足提示   | 调教点不足、补充能量、道具不足等现有提示             | `DailyTrainingCloseEnergyPrompt` / `DailyTrainingCloseShortagePopup` |
+
+## 选项与资源边界
+
+- “指定次数”输入覆盖 `max_hit`，不再覆盖 `repeat`，避免资源不足后仍连续盲点。次数统计的是点击动作，
+  不保证游戏实际接受了每次操作；未经过 Interface 的裸 Pipeline 默认最多点击 3 次。
+- “优先通用道具”先通用后活动；“优先活动道具”和“活动和通用都可”先活动后通用。
+  Interface 将选物分发节点的 `on_error` 指向备用栏，备用栏失败后返回。
+- Agent 默认排除通用 +2400 与活动 +2000 槽位，只在开关明确为布尔真时允许它们。
+- 库存 OCR 为空、混入效果数值、百分比或多个数字时跳过该槽位，并在诊断中保留 `unreadable_count`；
+  不把识别失败解释为“可能有道具”。参数或道具栏名非法时返回识别失败。
+- 全部点数模式仍采用最长 12 轮、每轮 3 秒的长按策略，不保证实际耗尽全部点数。
+
+## 异常与返回
+
+- 达到房间进度阈值可能出现剧情邀请。以正文“随时观看剧情”和左侧“取消”同时识别，点击取消后返回列表和主界面，不再继续消耗。若随后显示“已达到调教上限”，同时识别正文与“确定”后关闭，再返回；也兼容先出现上限提示的顺序。入口和详情返回也处理此弹窗，允许从中断现场恢复。
+- 不足提示不再仅凭通用标题“提示”或按钮“取消”命中；剧情和上限弹窗优先于不足提示及详情页候选。列表返回不再用宽范围内的 HP / ATK 文本作为依据，避免误命中上限提示中的属性说明。
+
+- 实际排序按钮可显示“入手顺序”；遗漏该文本会卡在房间列表。
+- 读取完整行后将点击限制在右侧窄箭头区域，不用旧的固定 y=828，也不在平移后的整个文字宽度中随机点击。
+- 筛选失败时先识别筛选面板再关闭，随后尝试返回主界面。无 `NEXT` 时由确认筛选节点选择列表返回，
+  不依赖未命中房间节点本身的 `on_error`。
+- 选物分发节点先执行，再识别候选道具；这样库存无匹配时，配置在分发节点上的 `on_error` 才能触发。
+- 详情返回兜底也要求识别“调教道具”，不在未知页面直接点返回坐标。所改动作保留点击前 300 毫秒稳定等待。
+- 房间切换、道具栏切换、活动道具选择和返回由目标页面识别承接，不等待全屏静止。
+  活动道具点击后，首次消耗仍须重新识别完整“调教道具”标题，避免角色动画造成选物后的长时间停顿。
+- 详情和列表返回的点击前稳定等待仍为 300 毫秒，仅检查左上角返回箭头区域 `[15, 52, 85, 44]`，
+  单次稳定等待上限 1500 毫秒，避开角色与房间动画；区域静止不代表游戏必然接受点击。
+- 返回后优先处理加载、礼包并确认主界面；详情返回还识别房间列表。目标页候选超时 1500 毫秒后，
+  只有重新识别到原页面才重试返回。常规详情返回和列表返回各最多点击 3 次，原详情兜底仍最多 1 次；
+  兜底未生效时转入常规详情重试。未知页面或次数用尽时失败，不重新执行调教动作。
+- `DailyTrainingDone` 先识别主界面，再进入公共观察与结束确认；不再直接进入只等待主界面的结束入口。
+
+## 完成状态
+
+- 正常目标：使用允许道具完成指定次数，或按配置消耗可用点数。
+- 实际结束条件还包括零点数、无可识别房间、无可用道具、剧情邀请、资源不足与次数上限；只有主界面确认后才是正常返回。
+- 任务停止不等同于指定次数均被游戏接受；需结合点击节点次数、点数与库存变化核对。

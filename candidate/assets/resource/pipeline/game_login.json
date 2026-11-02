@@ -1,0 +1,286 @@
+{
+    "GameLoginStart": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "StopApp",
+            "param": {
+                "package": "com.pinkcore.tkfm"
+            }
+        },
+        "next": [
+            "GameLoginLaunch"
+        ]
+    },
+    "GameLoginLaunch": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "StartApp",
+            "param": {
+                "package": "com.pinkcore.tkfm"
+            }
+        },
+        "next": [
+            "GameLoginDispatch"
+        ]
+    },
+    "GameLoginDispatch": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "timeout": 360000,
+        "next": [
+            "[JumpBack]CommonWaitLoading",
+            "[JumpBack]GameWaitResourceCheck",
+            "[JumpBack]GameCloseGift",
+            "[JumpBack]GameCloseAnnouncement",
+            "[JumpBack]GameCloseSignIn",
+            "[JumpBack]GameTapTitleScreen",
+            "GameLoginConfirmMain"
+        ],
+        "on_error": [
+            "GameLoginRestartOnce",
+            "GameLoginStopAfterTimeout"
+        ]
+    },
+    "GameLoginRestartOnce": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": [
+            "GameLoginStart"
+        ],
+        "max_hit": 1
+    },
+    "GameLoginStopAfterTimeout": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "StopTask"
+        }
+    },
+    "GameTapTitleScreen": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "TAPTO START",
+                    "TAP TO START",
+                    "TAPTOSTART",
+                    "TAPTOSTAR",
+                    "Ver",
+                    "Ver.",
+                    "Ver.2.2.1"
+                ],
+                "threshold": 0.3,
+                "roi": [
+                    180,
+                    1060,
+                    540,
+                    220
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    360,
+                    1135
+                ]
+            }
+        },
+        "max_hit": 5,
+        "post_delay": 1500
+    },
+    "GameWaitResourceCheck": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "资源检查中",
+                    "档案读取中"
+                ],
+                "roi": [
+                    180,
+                    1120,
+                    360,
+                    130
+                ]
+            }
+        }
+    },
+    "GameCloseEventSignIn": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__GameSignInTouchScreen"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "max_hit": 2,
+        "post_delay": 800,
+        "pre_wait_freezes": 300
+    },
+    "GameCloseAnnouncement": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    100,
+                    150,
+                    520,
+                    120
+                ],
+                "threshold": 0.3,
+                "expected": [
+                    "王城公布栏",
+                    "活动公告",
+                    "最新公告"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    360,
+                    1155
+                ]
+            }
+        },
+        "max_hit": 3,
+        "post_delay": 800,
+        "pre_wait_freezes": 300
+    },
+    "GameCloseSignIn": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__GameSignInTouchScreen"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": true
+            }
+        },
+        "max_hit": 4,
+        "post_delay": 800,
+        "pre_wait_freezes": 300
+    },
+    "GameCloseGift": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "__CommonGiftTabs"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    40,
+                    75
+                ]
+            }
+        },
+        "max_hit": 3,
+        "post_delay": 800,
+        "pre_wait_freezes": 300
+    },
+    "GameMainReady": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "CommonMainReady"
+                ]
+            }
+        },
+        "action": {
+            "type": "StopTask"
+        }
+    },
+    "__GameSignInTouchScreen": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    140,
+                    1080,
+                    440,
+                    170
+                ],
+                "expected": [
+                    "TOUCH\\s*SCREEN"
+                ],
+                "threshold": 0.5
+            }
+        }
+    },
+    "GameLoginConfirmMain": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "CommonMainReady"
+                ]
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "post_delay": 1500,
+        "next": [
+            "GameLoginMainInterrupted",
+            "GameMainReady",
+            "GameLoginDispatch"
+        ],
+        "max_hit": 5
+    },
+    "GameLoginMainInterrupted": {
+        "recognition": {
+            "type": "Or",
+            "param": {
+                "any_of": [
+                    "CommonWaitLoading",
+                    "GameWaitResourceCheck",
+                    "GameCloseGift",
+                    "GameCloseAnnouncement",
+                    "GameCloseSignIn",
+                    "GameTapTitleScreen"
+                ]
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": [
+            "GameLoginDispatch"
+        ],
+        "max_hit": 5
+    }
+}

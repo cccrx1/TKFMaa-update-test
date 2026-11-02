@@ -1,0 +1,2414 @@
+{
+    "interface_version": 2,
+    "name": "TKFMaa",
+    "description": "天下布魔小助手~",
+    "contact": "https://github.com/cccrx1/TKFMaa/issues",
+    "license": "MIT",
+    "welcome": "",
+    "github": "https://github.com/cccrx1/TKFMaa",
+    "version": "1.0.2",
+    "controller": [
+        {
+            "name": "安卓端",
+            "type": "Adb",
+            "display_short_side": 720
+        }
+    ],
+    "resource": [
+        {
+            "name": "官服",
+            "path": [
+                "./resource"
+            ]
+        }
+    ],
+    "agent": {
+        "child_exec": "python",
+        "child_args": [
+            "../agent/main.py"
+        ]
+    },
+    "task": [
+        {
+            "name": "启动游戏",
+            "entry": "GameLoginStart",
+            "option": [
+                "选择服务器"
+            ]
+        },
+        {
+            "name": "商城购买",
+            "entry": "DailyShopStart",
+            "option": [
+                "指定购买物品",
+                "指定协会商店购买物品"
+            ],
+            "doc": [
+                "从商店进入购买流程，根据输入列表分别扫描交易所和协会商店，购买所有未售罄的匹配商品。"
+            ]
+        },
+        {
+            "name": "领取体力",
+            "entry": "DailyFriendStaminaStart"
+        },
+        {
+            "name": "炼金订单",
+            "entry": "DailyAlchemyOrdersStart"
+        },
+        {
+            "name": "每日派遣",
+            "entry": "DailyDispatchStart",
+            "option": [
+                "派遣地点优先级",
+                "派遣时间优先级"
+            ],
+            "doc": [
+                "使用前须在游戏内为派遣栏位预先编好可出发队伍；任务会收回完成队伍，并为闲置队伍选择地点和时间后派出，不会自动编队。"
+            ]
+        },
+        {
+            "name": "消耗体力",
+            "entry": "DailyStaminaStart",
+            "option": [
+                "体力消耗关卡@088344be5cfd",
+                "扫荡不足时手动补刷",
+                "体力不足时使用体力药",
+                "体力不足时购买体力"
+            ],
+            "doc": [
+                "从主界面进入限时活动，按所选关卡配置寻找活动、入口图标和关卡名。",
+                "进入关卡详情后优先使用军团扫荡最大次数；扫荡券不足时可选是否手动补刷（没测试过）。"
+            ]
+        },
+        {
+            "name": "调教",
+            "entry": "DailyTrainingStart",
+            "option": [
+                "调教目标",
+                "调教道具范围",
+                "允许使用珍贵调教道具"
+            ],
+            "doc": [
+                "从主界面进入调教，筛选可调教房间，选择 NEXT 房间后按配置使用道具。",
+                "默认优先使用通用道具，不使用 +2000/+2400 这类珍贵道具；库存无法识别时跳过该槽位，道具或点数不足时停止。"
+            ]
+        },
+        {
+            "name": "全境征才",
+            "entry": "DailyRecruitmentStart",
+            "option": [
+                "全境征才立即招募"
+            ],
+            "doc": [
+                "从主界面进入召唤页的全境征才，固定扫描四个栏位。",
+                "出现领袖词条时跳过该栏位；有保底 2 星组合时调为 9 小时后招募；没有保底且仍有刷新次数时先刷新。",
+                "可选在四个栏位处理完成后，先自动点击全部立即招募/紧急征召，再统一一键录取结果后退出。"
+            ]
+        },
+        {
+            "name": "奖励领取",
+            "entry": "DailyTaskRewardsStart",
+            "doc": [
+                "从主界面打开任务页，依次检查每日、每周、每月、个人、活动、协会页签。",
+                "每个页签识别可领取任务后点击一键领取，并关闭获得奖励弹窗；全部页签处理后返回主界面。"
+            ]
+        }
+    ],
+    "option": {
+        "选择服务器": {
+            "type": "select",
+            "default_case": "工口服务器",
+            "cases": [
+                {
+                    "name": "工口服务器",
+                    "pipeline_override": {
+                        "GameLoginStart": {
+                            "action": {
+                                "type": "StopApp",
+                                "param": {
+                                    "package": "com.pinkcore.tkfm"
+                                }
+                            }
+                        },
+                        "GameLoginLaunch": {
+                            "action": {
+                                "type": "StartApp",
+                                "param": {
+                                    "package": "com.pinkcore.tkfm"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "erolab服务器",
+                    "pipeline_override": {
+                        "GameLoginStart": {
+                            "action": {
+                                "type": "StopApp",
+                                "param": {
+                                    "package": "com.pinkcore.tkfm.erolabs"
+                                }
+                            }
+                        },
+                        "GameLoginLaunch": {
+                            "action": {
+                                "type": "StartApp",
+                                "param": {
+                                    "package": "com.pinkcore.tkfm.erolabs"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "体力消耗关卡@088344be5cfd": {
+            "type": "select",
+            "default_case": "万圣鹿娘大横行！ - 关卡-1",
+            "cases": [
+                {
+                    "name": "万圣鹿娘大横行！ - 关卡-1",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入关卡-1并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "关卡-1"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunLeftColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 关卡-2",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入关卡-2并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "关卡-2"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunLeftColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 关卡-3",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入关卡-3并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "关卡-3"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunLeftColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 关卡-4",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入关卡-4并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "关卡-4"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunLeftColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 关卡-5",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入关卡-5并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "关卡-5"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 30,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunLeftColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 陷阱-1",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入陷阱-1并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "陷阱-1"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunRightColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 陷阱-2",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入陷阱-2并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "陷阱-2"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunRightColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 陷阱-3",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入陷阱-3并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "陷阱-3"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunRightColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 陷阱-4",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入陷阱-4并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "陷阱-4"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunRightColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "万圣鹿娘大横行！ - 陷阱-5",
+                    "description": "复刻活动二维地图：选择 万圣鹿娘大横行！，进入陷阱-5并扫荡。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "限时活动"
+                                    ],
+                                    "roi": [
+                                        480,
+                                        90,
+                                        150,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteInnerRerunUiStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "万圣鹿娘大横行！"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        770,
+                                        580,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "陷阱-5"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 50,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaRouteInnerRerunUiStart": {
+                            "next": [
+                                "DailyStaminaRerunClickTarget",
+                                "DailyStaminaRerunRightColumnStart"
+                            ]
+                        },
+                        "DailyStaminaPresetRerunMapMarker": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Story",
+                                        "Free Quest"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetRerunMapMarker"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "常驻关卡 - 战争演习-特IV",
+                    "description": "常驻路线：目前活动 → 日常政务 → 战争演习，进入纵向关卡列表后寻找战争演习-特IV。",
+                    "pipeline_override": {
+                        "DailyStaminaPresetRouteStart": {
+                            "next": [
+                                "DailyStaminaRouteActivitySectionStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivitySection": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "目前活动"
+                                    ],
+                                    "roi": [
+                                        270,
+                                        90,
+                                        180,
+                                        80
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetInnerRouteStart": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetDailyAffairsCategory"
+                                    ]
+                                }
+                            },
+                            "next": [
+                                "DailyStaminaRouteDailyAffairsStart"
+                            ]
+                        },
+                        "DailyStaminaPresetActivityName": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "日常政务"
+                                    ],
+                                    "roi": [
+                                        60,
+                                        740,
+                                        300,
+                                        110
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListTarget": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "战争演习-特IV",
+                                        "战争演习-特Ⅳ"
+                                    ],
+                                    "roi": [
+                                        0,
+                                        160,
+                                        720,
+                                        1000
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaEnough": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "enough",
+                                        "cost": 4,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStaminaLow": {
+                            "recognition": {
+                                "type": "Custom",
+                                "param": {
+                                    "custom_recognition": "DailyStaminaCompare",
+                                    "custom_recognition_param": {
+                                        "mode": "low",
+                                        "cost": 4,
+                                        "reserve": 0,
+                                        "stamina_roi": [
+                                            500,
+                                            0,
+                                            180,
+                                            45
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetDailyAffairsCategory": {
+                            "enabled": true,
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "战争演习"
+                                    ],
+                                    "roi": [
+                                        350,
+                                        120,
+                                        300,
+                                        1120
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyStaminaPresetStageListAnySelectable": {
+                            "enabled": true,
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "Lv.10",
+                                        "Lv.15",
+                                        "Lv.20",
+                                        "Lv.30",
+                                        "Lv.45",
+                                        "Lv.60"
+                                    ],
+                                    "roi": [
+                                        70,
+                                        80,
+                                        120,
+                                        1080
+                                    ]
+                                }
+                            }
+                        },
+                        "CommonReturnMainFromStaminaStageList": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "DailyStaminaPresetStageListAnySelectable"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "label": "体力消耗关卡",
+            "description": "活动关卡列表变化导致旧选择失效时，默认选择列表中的第一个关卡。"
+        },
+        "扫荡不足时手动补刷": {
+            "type": "switch",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "description": "扫荡券不足或扫荡后仍有足够体力时，继续使用开始/再次挑战手动补刷。",
+                    "pipeline_override": {
+                        "DailyStaminaManualStart": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "description": "只使用军团扫荡；扫荡不可用或扫荡后仍有体力也返回主界面停止。",
+                    "pipeline_override": {
+                        "DailyStaminaManualStart": {
+                            "enabled": false
+                        }
+                    }
+                }
+            ]
+        },
+        "体力不足时使用体力药": {
+            "type": "switch",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "description": "体力不足时按临期顺序逐瓶使用体力药，补足后继续，单次任务最多使用 10 瓶。",
+                    "pipeline_override": {
+                        "DailyStaminaRefillWithPotionWhenLow": {
+                            "enabled": true
+                        },
+                        "DailyStaminaUsePotionPopup": {
+                            "enabled": true
+                        },
+                        "DailyStaminaSelectPotionTab": {
+                            "enabled": true
+                        },
+                        "RegularActivityUsePotionPopup": {
+                            "enabled": true
+                        },
+                        "RegularActivityRefillWithPotionWhenLow": {
+                            "enabled": true
+                        },
+                        "RegularActivitySelectPotionTab": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "description": "不自动使用体力药。",
+                    "pipeline_override": {
+                        "DailyStaminaRefillWithPotionWhenLow": {
+                            "enabled": false
+                        },
+                        "DailyStaminaUsePotionPopup": {
+                            "enabled": false
+                        },
+                        "DailyStaminaSelectPotionTab": {
+                            "enabled": false
+                        },
+                        "RegularActivityUsePotionPopup": {
+                            "enabled": false
+                        },
+                        "RegularActivityRefillWithPotionWhenLow": {
+                            "enabled": false
+                        },
+                        "RegularActivitySelectPotionTab": {
+                            "enabled": false
+                        }
+                    }
+                }
+            ]
+        },
+        "体力不足时购买体力": {
+            "type": "switch",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "description": "体力不足且出现魔晶石兑换提示时，按弹窗当前价格购买一次体力并继续当前流程。",
+                    "pipeline_override": {
+                        "DailyStaminaRefillWithCurrencyWhenLow": {
+                            "enabled": true
+                        },
+                        "DailyStaminaBuyStaminaPopup": {
+                            "enabled": true
+                        },
+                        "DailyStaminaSelectCurrencyTab": {
+                            "enabled": true
+                        },
+                        "RegularActivityBuyStaminaPopup": {
+                            "enabled": true
+                        },
+                        "RegularActivityRefillWithCurrencyWhenLow": {
+                            "enabled": true
+                        },
+                        "RegularActivitySelectCurrencyTab": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "description": "不自动消耗魔晶石购买体力。",
+                    "pipeline_override": {
+                        "DailyStaminaRefillWithCurrencyWhenLow": {
+                            "enabled": false
+                        },
+                        "DailyStaminaBuyStaminaPopup": {
+                            "enabled": false
+                        },
+                        "DailyStaminaSelectCurrencyTab": {
+                            "enabled": false
+                        },
+                        "RegularActivityBuyStaminaPopup": {
+                            "enabled": false
+                        },
+                        "RegularActivityRefillWithCurrencyWhenLow": {
+                            "enabled": false
+                        },
+                        "RegularActivitySelectCurrencyTab": {
+                            "enabled": false
+                        }
+                    }
+                }
+            ]
+        },
+        "全境征才立即招募": {
+            "type": "switch",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "description": "四个栏位处理完成后，先依次点击所有可见的立即招募/紧急征召，再一键录取结果；循环次数用尽后返回主界面。",
+                    "option": [
+                        "全境征才循环次数"
+                    ],
+                    "pipeline_override": {
+                        "DailyRecruitmentAfterSlots": {
+                            "next": [
+                                "DailyRecruitmentImmediateRecruitAllStart"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "description": "保持原流程：四个栏位处理完成后直接返回主界面。",
+                    "pipeline_override": {
+                        "DailyRecruitmentAfterSlots": {
+                            "next": [
+                                "DailyRecruitmentReturnFromOverview"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "全境征才循环次数": {
+            "type": "input",
+            "inputs": [
+                {
+                    "name": "次数",
+                    "pipeline_type": "int",
+                    "default": "1",
+                    "verify": "^[1-9][0-9]?$|^100$",
+                    "pattern_msg": "请输入 1-100 的整数"
+                }
+            ],
+            "pipeline_override": {
+                "DailyRecruitmentCycleGate": {
+                    "max_hit": "{次数}"
+                }
+            }
+        },
+        "调教目标": {
+            "type": "select",
+            "default_case": "指定次数",
+            "cases": [
+                {
+                    "name": "指定次数",
+                    "description": "按下方输入的调教次数执行，到达次数或道具/点数不足后停止。",
+                    "option": [
+                        "指定调教次数"
+                    ],
+                    "pipeline_override": {
+                        "DailyTrainingClickCenterStart": {
+                            "next": [
+                                "DailyTrainingClickCenterSlow"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "全部点数",
+                    "description": "尽量消耗当前可用调教点数，道具或点数不足后停止。",
+                    "pipeline_override": {
+                        "DailyTrainingClickCenterStart": {
+                            "next": [
+                                "DailyTrainingClickCenterAllPoints"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "指定调教次数": {
+            "type": "input",
+            "inputs": [
+                {
+                    "name": "次数",
+                    "pipeline_type": "int",
+                    "default": "5",
+                    "verify": "^[1-9][0-9]?$|^100$",
+                    "pattern_msg": "请输入 1-100 的整数"
+                }
+            ],
+            "pipeline_override": {
+                "DailyTrainingClickCenterSlow": {
+                    "max_hit": "{次数}"
+                }
+            }
+        },
+        "调教道具范围": {
+            "type": "select",
+            "default_case": "优先通用道具",
+            "cases": [
+                {
+                    "name": "优先活动道具",
+                    "description": "优先使用活动栏道具，不足时再使用通用栏道具。",
+                    "pipeline_override": {
+                        "DailyTrainingConfigItemScope": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "优先活动道具"
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyTrainingSelectConfiguredItem": {
+                            "next": [
+                                "DailyTrainingSelectEventTab"
+                            ]
+                        },
+                        "DailyTrainingChooseEventItem": {
+                            "on_error": [
+                                "DailyTrainingSelectCommonTab"
+                            ]
+                        },
+                        "DailyTrainingChooseCommonItem": {
+                            "on_error": [
+                                "DailyTrainingReturnRoomListFromDetailFallback"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "优先通用道具",
+                    "description": "优先使用通用栏道具，不足时再使用活动栏道具。",
+                    "pipeline_override": {
+                        "DailyTrainingConfigItemScope": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "优先通用道具"
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyTrainingSelectConfiguredItem": {
+                            "next": [
+                                "DailyTrainingSelectCommonTab"
+                            ]
+                        },
+                        "DailyTrainingChooseCommonItem": {
+                            "on_error": [
+                                "DailyTrainingSelectEventTab"
+                            ]
+                        },
+                        "DailyTrainingChooseEventItem": {
+                            "on_error": [
+                                "DailyTrainingReturnRoomListFromDetailFallback"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "活动和通用都可",
+                    "description": "两个栏位都允许使用，当前实现优先扫描活动栏。",
+                    "pipeline_override": {
+                        "DailyTrainingConfigItemScope": {
+                            "recognition": {
+                                "type": "OCR",
+                                "param": {
+                                    "expected": [
+                                        "活动和通用都可"
+                                    ]
+                                }
+                            }
+                        },
+                        "DailyTrainingSelectConfiguredItem": {
+                            "next": [
+                                "DailyTrainingSelectEventTab"
+                            ]
+                        },
+                        "DailyTrainingChooseEventItem": {
+                            "on_error": [
+                                "DailyTrainingSelectCommonTab"
+                            ]
+                        },
+                        "DailyTrainingChooseCommonItem": {
+                            "on_error": [
+                                "DailyTrainingReturnRoomListFromDetailFallback"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "允许使用珍贵调教道具": {
+            "type": "switch",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "description": "允许使用 +2000/+2400 这类高价值调教道具。",
+                    "pipeline_override": {
+                        "DailyTrainingConfigAllowRare": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "description": "默认排除 +2000/+2400 这类高价值调教道具。",
+                    "pipeline_override": {
+                        "DailyTrainingConfigAllowRare": {
+                            "enabled": false
+                        }
+                    }
+                }
+            ]
+        },
+        "派遣地点优先级": {
+            "type": "select",
+            "default_case": "寝室-地牢-训练所-宝藏库-封印密室",
+            "cases": [
+                {
+                    "name": "寝室-地牢-训练所-宝藏库-封印密室",
+                    "description": "优先选择魔王寝室，其次地牢、训练所、宝藏库、封印密室。",
+                    "pipeline_override": {
+                        "DailyDispatchSelectLocationStart": {
+                            "next": [
+                                "DailyDispatchSelectBedroom",
+                                "DailyDispatchSelectDungeon",
+                                "DailyDispatchSelectTraining",
+                                "DailyDispatchSelectTreasureVault",
+                                "DailyDispatchSelectSealRoom",
+                                "DailyDispatchSwipeLocationListDown",
+                                "DailyDispatchSelectBedroomAfterSwipe",
+                                "DailyDispatchSelectDungeonAfterSwipe",
+                                "DailyDispatchSelectTrainingAfterSwipe",
+                                "DailyDispatchSelectTreasureVaultAfterSwipe",
+                                "DailyDispatchSelectSealRoomAfterSwipe"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "地牢-训练所-宝藏库-封印密室-寝室",
+                    "description": "优先选择地牢，其次训练所、宝藏库、封印密室、魔王寝室。",
+                    "pipeline_override": {
+                        "DailyDispatchSelectLocationStart": {
+                            "next": [
+                                "DailyDispatchSelectDungeon",
+                                "DailyDispatchSelectTraining",
+                                "DailyDispatchSelectTreasureVault",
+                                "DailyDispatchSelectSealRoom",
+                                "DailyDispatchSelectBedroom",
+                                "DailyDispatchSwipeLocationListDown",
+                                "DailyDispatchSelectDungeonAfterSwipe",
+                                "DailyDispatchSelectTrainingAfterSwipe",
+                                "DailyDispatchSelectTreasureVaultAfterSwipe",
+                                "DailyDispatchSelectSealRoomAfterSwipe",
+                                "DailyDispatchSelectBedroomAfterSwipe"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "训练所-宝藏库-封印密室-地牢-寝室",
+                    "description": "优先选择训练所，其次宝藏库、封印密室、地牢、魔王寝室。",
+                    "pipeline_override": {
+                        "DailyDispatchSelectLocationStart": {
+                            "next": [
+                                "DailyDispatchSelectTraining",
+                                "DailyDispatchSelectTreasureVault",
+                                "DailyDispatchSelectSealRoom",
+                                "DailyDispatchSelectDungeon",
+                                "DailyDispatchSelectBedroom",
+                                "DailyDispatchSwipeLocationListDown",
+                                "DailyDispatchSelectTrainingAfterSwipe",
+                                "DailyDispatchSelectTreasureVaultAfterSwipe",
+                                "DailyDispatchSelectSealRoomAfterSwipe",
+                                "DailyDispatchSelectDungeonAfterSwipe",
+                                "DailyDispatchSelectBedroomAfterSwipe"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "派遣时间优先级": {
+            "type": "select",
+            "default_case": "最大时间优先",
+            "cases": [
+                {
+                    "name": "最大时间优先",
+                    "description": "优先选择每个地点从左向右第一个时间按钮。",
+                    "pipeline_override": {
+                        "DailyDispatchSelectBedroom": {
+                            "next": [
+                                "DailyDispatchSelectBedroomTime1",
+                                "DailyDispatchSelectBedroomTime2",
+                                "DailyDispatchSelectBedroomTime3",
+                                "DailyDispatchSelectBedroomTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectBedroomAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectBedroomTime1",
+                                "DailyDispatchSelectBedroomTime2",
+                                "DailyDispatchSelectBedroomTime3",
+                                "DailyDispatchSelectBedroomTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectDungeon": {
+                            "next": [
+                                "DailyDispatchSelectDungeonTime1",
+                                "DailyDispatchSelectDungeonTime2",
+                                "DailyDispatchSelectDungeonTime3",
+                                "DailyDispatchSelectDungeonTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectDungeonAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectDungeonTime1",
+                                "DailyDispatchSelectDungeonTime2",
+                                "DailyDispatchSelectDungeonTime3",
+                                "DailyDispatchSelectDungeonTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectTraining": {
+                            "next": [
+                                "DailyDispatchSelectTrainingTime1",
+                                "DailyDispatchSelectTrainingTime2",
+                                "DailyDispatchSelectTrainingTime3",
+                                "DailyDispatchSelectTrainingTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectTrainingAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectTrainingTime1",
+                                "DailyDispatchSelectTrainingTime2",
+                                "DailyDispatchSelectTrainingTime3",
+                                "DailyDispatchSelectTrainingTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectTreasureVault": {
+                            "next": [
+                                "DailyDispatchSelectTreasureVaultTime1",
+                                "DailyDispatchSelectTreasureVaultTime2",
+                                "DailyDispatchSelectTreasureVaultTime3",
+                                "DailyDispatchSelectTreasureVaultTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectTreasureVaultAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectTreasureVaultTime1",
+                                "DailyDispatchSelectTreasureVaultTime2",
+                                "DailyDispatchSelectTreasureVaultTime3",
+                                "DailyDispatchSelectTreasureVaultTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectSealRoom": {
+                            "next": [
+                                "DailyDispatchSelectSealRoomTime1",
+                                "DailyDispatchSelectSealRoomTime2",
+                                "DailyDispatchSelectSealRoomTime3",
+                                "DailyDispatchSelectSealRoomTime4"
+                            ]
+                        },
+                        "DailyDispatchSelectSealRoomAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectSealRoomTime1",
+                                "DailyDispatchSelectSealRoomTime2",
+                                "DailyDispatchSelectSealRoomTime3",
+                                "DailyDispatchSelectSealRoomTime4"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "短时间优先",
+                    "description": "优先选择每个地点从右向左第一个时间按钮。",
+                    "pipeline_override": {
+                        "DailyDispatchSelectBedroom": {
+                            "next": [
+                                "DailyDispatchSelectBedroomTime4",
+                                "DailyDispatchSelectBedroomTime3",
+                                "DailyDispatchSelectBedroomTime2",
+                                "DailyDispatchSelectBedroomTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectBedroomAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectBedroomTime4",
+                                "DailyDispatchSelectBedroomTime3",
+                                "DailyDispatchSelectBedroomTime2",
+                                "DailyDispatchSelectBedroomTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectDungeon": {
+                            "next": [
+                                "DailyDispatchSelectDungeonTime4",
+                                "DailyDispatchSelectDungeonTime3",
+                                "DailyDispatchSelectDungeonTime2",
+                                "DailyDispatchSelectDungeonTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectDungeonAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectDungeonTime4",
+                                "DailyDispatchSelectDungeonTime3",
+                                "DailyDispatchSelectDungeonTime2",
+                                "DailyDispatchSelectDungeonTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectTraining": {
+                            "next": [
+                                "DailyDispatchSelectTrainingTime4",
+                                "DailyDispatchSelectTrainingTime3",
+                                "DailyDispatchSelectTrainingTime2",
+                                "DailyDispatchSelectTrainingTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectTrainingAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectTrainingTime4",
+                                "DailyDispatchSelectTrainingTime3",
+                                "DailyDispatchSelectTrainingTime2",
+                                "DailyDispatchSelectTrainingTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectTreasureVault": {
+                            "next": [
+                                "DailyDispatchSelectTreasureVaultTime4",
+                                "DailyDispatchSelectTreasureVaultTime3",
+                                "DailyDispatchSelectTreasureVaultTime2",
+                                "DailyDispatchSelectTreasureVaultTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectTreasureVaultAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectTreasureVaultTime4",
+                                "DailyDispatchSelectTreasureVaultTime3",
+                                "DailyDispatchSelectTreasureVaultTime2",
+                                "DailyDispatchSelectTreasureVaultTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectSealRoom": {
+                            "next": [
+                                "DailyDispatchSelectSealRoomTime4",
+                                "DailyDispatchSelectSealRoomTime3",
+                                "DailyDispatchSelectSealRoomTime2",
+                                "DailyDispatchSelectSealRoomTime1"
+                            ]
+                        },
+                        "DailyDispatchSelectSealRoomAfterSwipe": {
+                            "next": [
+                                "DailyDispatchSelectSealRoomTime4",
+                                "DailyDispatchSelectSealRoomTime3",
+                                "DailyDispatchSelectSealRoomTime2",
+                                "DailyDispatchSelectSealRoomTime1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "指定购买物品": {
+            "type": "input",
+            "inputs": [
+                {
+                    "name": "物品列表",
+                    "pipeline_type": "string",
+                    "default": "紧急录用证|初级体力药水|招募命令",
+                    "verify": "^[^\\n]+$",
+                    "pattern_msg": "请输入单行的分隔列表，不要换行"
+                }
+            ],
+            "pipeline_override": {
+                "DailyShopExchangeTargetItem": {
+                    "recognition": {
+                        "type": "Custom",
+                        "param": {
+                            "custom_recognition": "DailyShopExchangeTargetItem",
+                            "custom_recognition_param": {
+                                "target_names": "{物品列表}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "指定协会商店购买物品": {
+            "type": "input",
+            "inputs": [
+                {
+                    "name": "物品列表",
+                    "pipeline_type": "string",
+                    "default": "召唤契约|魔晶石|阿克色记录",
+                    "verify": "^[^\\n]+$",
+                    "pattern_msg": "请输入单行的分隔列表，不要换行"
+                }
+            ],
+            "pipeline_override": {
+                "DailyShopGuildTargetItem": {
+                    "recognition": {
+                        "type": "Custom",
+                        "param": {
+                            "custom_recognition": "DailyShopGuildTargetItem",
+                            "custom_recognition_param": {
+                                "shop_id": "guild",
+                                "target_names": "{物品列表}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

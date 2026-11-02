@@ -1,0 +1,146 @@
+version: 1
+
+defaults:
+  activity_section:
+    expected: ["限时活动"]
+    roi: [480, 90, 150, 80]
+  activity_name_roi: [70, 770, 580, 60]
+  stage_roi: [0, 160, 720, 1000]
+  stamina_roi: [500, 0, 180, 45]
+  reserve: 0
+
+templates:
+  regular_paged_list:
+    route_type: normal_list
+    extra_overrides:
+      DailyStaminaPresetInnerRouteStart:
+        next: ["DailyStaminaRouteRegularPagedFirstPageStart"]
+
+  rerun_activity_map:
+    route_type: rerun_map
+
+  large_activity_stage_icon:
+    route_type: special_icon
+
+  large_activity_direct_stage:
+    route_type: challenge_button
+
+  daily_affairs_list:
+    route_type: daily_affairs
+
+activity_groups:
+  idol_live:
+    case_prefix: "Idol Live"
+    description_template: "限时活动外部路线 + 常规活动纵向关卡列表：选择 {activity}，进入关卡列表后寻找{stage}，刷取{stage}。"
+    base:
+      template: regular_paged_list
+      stamina:
+        cost: 30
+      activity_name:
+        expected: ["Idol Live"]
+        roi: [70, 770, 580, 80]
+      stage:
+        any_selectable:
+          expected: ["Idol Live", "活动挑战还有", "斗内点数"]
+          roi: [0, 90, 720, 180]
+      extra_overrides:
+        DailyStaminaPresetFirstPageMarker:
+          enabled: true
+          recognition:
+            type: OCR
+            param:
+              expected:
+                [
+                  "话题-01",
+                  "话题01",
+                  "准备-01",
+                  "准备01",
+                  "装扮-01",
+                  "装扮01",
+                  "粉丝-01",
+                  "粉丝01",
+                  "互动-01",
+                  "互动01",
+                  "擦边-01",
+                  "擦边01",
+                ]
+              roi: [0, 160, 720, 1000]
+    cases:
+      - case_suffix: "擦边-01"
+        stage:
+          expected: ["擦边-01", "擦边01"]
+        stamina:
+          cost: 45
+      - case_suffix: "话题-01"
+        stage:
+          expected: ["话题-01", "话题01"]
+        stamina:
+          cost: 25
+      - case_suffix: "准备-01"
+        stage:
+          expected: ["准备-01", "准备01"]
+      - case_suffix: "装扮-01"
+        stage:
+          expected: ["装扮-01", "装扮01"]
+      - case_suffix: "粉丝-01"
+        stage:
+          expected: ["粉丝-01", "粉丝01"]
+      - case_suffix: "互动-01"
+        stage:
+          expected: ["互动-01", "互动01"]
+      - case_suffix: "自动通关"
+        description: "复用统一活动外部寻路进入 Idol Live 本体，再按 NEW 标记推进未通关关卡，自动跳过剧情并完成战斗。"
+        mode: regular_auto_clear
+
+  beast_ear_village_legend:
+    case_prefix: "兽耳乡的传说"
+    description_template: "限时活动外部路线 + 复刻活动地图：选择 {activity}，进入活动地图右列寻找{stage}，刷取{stage}。"
+    base:
+      template: rerun_activity_map
+      stamina:
+        cost: 35
+      activity_name:
+        expected: ["兽耳乡的传说"]
+      rerun:
+        column: right
+        marker:
+          expected: ["Story", "Free Quest"]
+          roi: [0, 160, 720, 1000]
+    cases:
+      - case_suffix: "搜寻"
+        stage:
+          expected: ["搜寻-02"]
+      - case_suffix: "秘宝"
+        stage:
+          expected: ["秘宝-02"]
+      - case_suffix: "陷阱"
+        stage:
+          expected: ["陷阱-02"]
+      - case_suffix: "料理"
+        stage:
+          expected: ["料理-02"]
+      - case_suffix: "探险"
+        stage:
+          expected: ["探险-02"]
+
+activities:
+  - name: "常驻关卡 - 战争演习-特IV"
+    description: "常驻路线：目前活动 → 日常政务 → 战争演习，进入纵向关卡列表后寻找战争演习-特IV。"
+    template: daily_affairs_list
+    activity_section:
+      expected: ["目前活动"]
+      roi: [270, 90, 180, 80]
+    activity_name:
+      expected: ["日常政务"]
+      roi: [60, 740, 300, 110]
+    daily_affairs:
+      category:
+        expected: ["战争演习"]
+        roi: [350, 120, 300, 1120]
+    stage:
+      expected: ["战争演习-特IV", "战争演习-特Ⅳ"]
+      any_selectable:
+        expected: ["Lv.10", "Lv.15", "Lv.20", "Lv.30", "Lv.45", "Lv.60"]
+        roi: [70, 80, 120, 1080]
+    stamina:
+      cost: 4

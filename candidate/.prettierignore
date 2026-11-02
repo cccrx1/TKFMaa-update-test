@@ -1,0 +1,20 @@
+# 构建产物
+install/
+build/
+node_modules/
+
+# 本地开发和运行产物
+.venv/
+.venv312/
+config/
+debug/
+
+# 子模块
+assets/MaaCommonAssets
+
+# 跳过 schema 目录，避免与 sync_schema_files 冲突
+deps/tools/
+
+# 锁文件
+pnpm-lock.yaml
+package-lock.json
